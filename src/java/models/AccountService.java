@@ -10,17 +10,18 @@ import models.User;
  * @author Aster
  */
 public class AccountService {
-    public User login(String username, String password) {
-        String user = username;
-        String pass = password;
-        if ((user.equals("abe") && pass.equals("password")) || (user.equals("barb" ) && password.equals("password"))) {
-            User profile = new User(); 
-            profile.setName(user);
-            profile.setPass("");
-            return profile;
+    public User login(String username, String password) throws NullPointerException {
+        User user = new User();
+        user.setName(username);
+        user.setPass(password);
+        try {
+            if ((user.getName().equals("abe") && user.getPass().equals("password")) || (user.getName().equals("barb" ) && user.getPass().equals("password"))) {
+            return user;
+            }
         }
-        else {
+        catch (NullPointerException e) {
             return null;
         }
-    }
+        return null;
+}
 }

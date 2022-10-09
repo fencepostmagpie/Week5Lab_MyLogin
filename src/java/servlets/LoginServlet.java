@@ -51,34 +51,36 @@ public class LoginServlet extends HttpServlet {
                     .forward(request, response);
         }
         else {
-               response.sendRedirect(request.getContextPath() + "/home");  
+               response.sendRedirect("home");  
         }
     }
 
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, NullPointerException {
         String username = (String) request.getAttribute("username");
         String password = (String) request.getAttribute("password");
         //If the username or password are blank, an error is displayed and we return to the login page
-        if (username.equals("") || password.equals("")) {
+        try {
+            if (!username.equals("") || password.equals("")) {
             request.setAttribute("username", username);
             request.setAttribute("password", password);
             request.setAttribute("message", "Invalid login. Make sure to fill both fields.");
             getServletContext().getRequestDispatcher("/WEB-INF/login.jsp")
                     .forward(request, response);
+            }
         }
         //If the username and password are filled
-        else {
+        catch (NullPointerException e) {
             AccountService newlogin = new AccountService();
-            if (newlogin.login(username, password) != null){
+            if (newlogin.login(username, password) != null){ //If user/password matches one of the stored pairs
                 HttpSession session = request.getSession();
-                session.setAttribute("username", username);
+                session.setAttribute("username", username); //Set username as a session thing
         getServletContext().getRequestDispatcher("/WEB-INF/home.jsp")
                     .forward(request, response);
             }
-            else {
+            else { //If the user/pass pair doesn't match, return to the login page with an error message and the current info
             request.setAttribute("username", username);
             request.setAttribute("password", password);
             request.setAttribute("message", "Invalid login. Make sure to fill both fields.");

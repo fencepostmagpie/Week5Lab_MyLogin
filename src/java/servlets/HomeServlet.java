@@ -44,12 +44,12 @@ public class HomeServlet extends HttpServlet {
         String username = (String) session.getAttribute("username");
         try {
             if (!username.equals("")) {
-        response.sendRedirect(request.getContextPath() + "/home");
+                    getServletContext().getRequestDispatcher("/WEB-INF/home.jsp")
+                   .forward(request, response);
             }
         }
         catch (NullPointerException e) {
-            getServletContext().getRequestDispatcher("/WEB-INF/login.jsp")
-                   .forward(request, response);
+            response.sendRedirect("login");
         }
     }
 
