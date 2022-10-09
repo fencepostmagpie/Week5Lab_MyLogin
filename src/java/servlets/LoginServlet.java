@@ -42,18 +42,17 @@ public class LoginServlet extends HttpServlet {
         String username = (String) session.getAttribute("username");
         String logout = request.getParameter("request");
         getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
-//                    .forward(request, response);
-//        if (username.equals("") || username == null) { //If no username session variable exists
-//            if (logout.equals("logout")){
-//            session.invalidate();
-//            request.setAttribute("message", "Successfully logged out.");
-//            }
-//               getServletContext().getRequestDispatcher("/WEB-INF/login.jsp")
-//                    .forward(request, response);
-//        }
-//        else {
-//               response.sendRedirect(request.getContextPath() + "/home");  
-//        }
+        if (username.equals("") || username == null) { //If no username session variable exists
+            if (logout.equals("logout")){
+            session.invalidate();
+            request.setAttribute("message", "Successfully logged out.");
+            }
+               getServletContext().getRequestDispatcher("/WEB-INF/login.jsp")
+                    .forward(request, response);
+        }
+        else {
+               response.sendRedirect(request.getContextPath() + "/home");  
+        }
     }
 
     
@@ -62,13 +61,15 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         String username = (String) request.getAttribute("username");
         String password = (String) request.getAttribute("password");
-        if (username == null || username.equals("") || password == null || password.equals("")) {
+        //If the username or password are blank, an error is displayed and we return to the login page
+        if (username.equals("") || password.equals("")) {
             request.setAttribute("username", username);
             request.setAttribute("password", password);
             request.setAttribute("message", "Invalid login. Make sure to fill both fields.");
             getServletContext().getRequestDispatcher("/WEB-INF/login.jsp")
                     .forward(request, response);
         }
+        //If the username and password are filled
         else {
             AccountService newlogin = new AccountService();
             if (newlogin.login(username, password) != null){

@@ -39,15 +39,18 @@ public class HomeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, NullPointerException {
                 HttpSession session = request.getSession();
         String username = (String) session.getAttribute("username");
-//        if (username.equals("") || username == null) { //If username is empty
-//        response.sendRedirect(request.getContextPath() + "/login");
-//        }
-//        else {
-         getServletContext().getRequestDispatcher("/WEB-INF/home.jsp").forward(request, response);
-//        }
+        try {
+            if (!username.equals("")) {
+        response.sendRedirect(request.getContextPath() + "/home");
+            }
+        }
+        catch (NullPointerException e) {
+            getServletContext().getRequestDispatcher("/WEB-INF/login.jsp")
+                   .forward(request, response);
+        }
     }
 
     @Override
