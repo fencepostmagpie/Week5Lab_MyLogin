@@ -74,7 +74,8 @@ public class LoginServlet extends HttpServlet {
         //If the username and password are filled
         catch (NullPointerException e) {
             AccountService newlogin = new AccountService();
-            if (newlogin.login(username, password) != null){ //If user/password matches one of the stored pairs
+            User checkNull = newlogin.login(username, password);
+            if (checkNull != null){ //If user/password matches one of the stored pairs
                 HttpSession session = request.getSession();
                 session.setAttribute("username", username); //Set username as a session thing
         getServletContext().getRequestDispatcher("/WEB-INF/home.jsp")
@@ -83,7 +84,7 @@ public class LoginServlet extends HttpServlet {
             else { //If the user/pass pair doesn't match, return to the login page with an error message and the current info
             request.setAttribute("username", username);
             request.setAttribute("password", password);
-            request.setAttribute("message", "Invalid login. Make sure to fill both fields.");
+            request.setAttribute("message", "Invalid login. This user account doesn't exist.");
             getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
             }
         }
